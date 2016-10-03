@@ -1,5 +1,12 @@
 window.onload = function() {
 	var text_area = document.getElementById("input");
+	text_area.setAttribute('placeholder',
+		'Paste tab-delimited text here and press ENTER\n' +
+		'0:02:05	Drukqs	Aphex Twin	Avril 14th\n' +
+		'0:06:02	Flavour Country EP	Bent	Exercise 5'
+	);
+
+	// If the user presses the enter key, interpret this as a submit action
 	text_area.onkeyup = function(evt) {
 		evt = evt || window.event;
 		if (evt.keyCode == 13) {
