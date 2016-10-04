@@ -1,6 +1,17 @@
 // Namespace for this project.
 var spreadsheet2cue = {
+	/**
+	 * Configuration parameters
+	 */
 	download_filename: 'playlist.cue',
+
+	/**
+	 * Utility functions
+	 */
+	isNotPopulated: function (text) {
+		return text.length == 0;
+	},
+
 };
 
 window.onload = function() {
@@ -33,9 +44,6 @@ window.onload = function() {
 
 	// If the user has not pasted text into the textarea, we do not want to
 	// process the placeholder text.
-	spreadsheet2cue.isNotPopulated = function (text) {
-		return text.length == 0;
-	};
 
 };
 
