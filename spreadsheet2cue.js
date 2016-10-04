@@ -20,29 +20,12 @@ var spreadsheet2cue = {
 	download_filename: 'playlist.cue',
 
 
-	/////////////////////////////////////////////////////////////////////////////
-	// Utility functions
-	/////////////////////////////////////////////////////////////////////////////
-
-	/** Pad a number with zeros.
-		* e.g. var fu = paddy(14, 5);				// '00014'
-		*      var bar = paddy(2, 4, '#');		// '###2'
-		* @function paddy
-		* @memberof spreadsheet2cue
-		* @static
-		* @copyright http://stackoverflow.com/a/9744576/412495
-		*/
-	paddy: function (n, p, c) {
-		var pad_char = typeof c !== 'undefined' ? c : '0';
-		var pad = new Array(1 + p).join(pad_char);
-		return (pad + n).slice(-pad.length);
-	},
-
-	/** Create a file and download it within JavaScript.
+	/**
+	 * Create a file and download it within JavaScript.
+	 * Adapted from http://stackoverflow.com/a/18197341
 	 * @function download
 	 * @memberof spreadsheet2cue
 	 * @static
-	 * @copyright http://stackoverflow.com/a/18197341
 	 */
 	download: function(filename, text) {
 	  var element = document.createElement('a');
@@ -211,8 +194,8 @@ function CueTrack(tab_delimited_string) {
  * @returns {string}
  */
 CueTrack.prototype.timeFormat = function(duration) {
-	var p = spreadsheet2cue.paddy;
-	return p(duration.minutes(), 2) + ':' + p(duration.seconds(), 2) + ':00';
+	return paddy(duration.minutes(), 2) + ':' + 
+		paddy(duration.seconds(), 2) + ':00';
 };
 
 /** @function
@@ -223,7 +206,7 @@ CueTrack.prototype.timeFormat = function(duration) {
  */
 CueTrack.prototype.toString = function() {
 	return '' +
-		'  TRACK ' + spreadsheet2cue.paddy(this.track_no, 2) + ' AUDIO' + '\n' +
+		'  TRACK ' + paddy(this.track_no, 2) + ' AUDIO' + '\n' +
 		'    TITLE "' + this.title + '"\n' +
 		'    PERFORMER "' + this.artist + '"\n' +
 		'    INDEX 01 ' + this.timeFormat(this.index) + '\n';
