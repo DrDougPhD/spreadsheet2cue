@@ -3,56 +3,12 @@ var spreadsheet2cue = {
 	/****************************
 	 * Configuration parameters
 	 ****************************/
-	download_filename: 'playlist.txt',
+	download_filename: 'playlist.cue',
 
-	CUE_HEADER: '' +
-		'REM GENRE Alternative' + '\n' +
-		'REM DATE 2016' + '\n' +
-		'REM DJ "Diabeatz"' + '\n' +
-		'REM RADIO "KMNR 89.7 FM"' + '\n' +
-		'REM WEBSTREAM "https://boombox.kmnr.org/webstream.ogg.m3u"' + '\n' +
-		'REM COMMENT "Tune in to KMNR 89.7 FM every Friday 2pm-4pm CST to hear my show! Call/text in at 504-656-6735! After Jan 2017, I may have a different show slot, though."' + '\n' +
-		'PERFORMER "Diabeatz"' + '\n' +
-		'TITLE "PhD: Piled Higher & Deeper"' + '\n' +
-		'FILE "ThisUpload.wav" WAVE',
-
-
-	/** Create a file and download it.
-	 */
-	download: function(text) {
-	  var element = document.createElement('a');
-		element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-	  element.setAttribute('download', spreadsheet2cue.download_filename);
-
-	  element.style.display = 'none';
-		document.body.appendChild(element);
-
-	  element.click();
-
-	  document.body.removeChild(element);
-	},
 
 	/*********************
 	 * Utility functions
 	 *********************/
-	songs2cue: function(songs) {
-		var text = this.CUE_HEADER;
-		var current_index = moment.duration();
-		for (var i=0; i<songs.length; i++){
-			// 01, 02, ..., 09, 10, 11, ...
-			var track_no = spreadsheet2cue.paddy(i, 2);
-			var s = songs[i];
-			text += '\n' +
-				'  TRACK ' + track_no + ' AUDIO' + '\n' +
-				'    TITLE "' + s.title + '"\n' +
-				'    PERFORMER "' + s.artist + '"\n' +
-				'    INDEX 01 ' + spreadsheet2cue.dur2index(current_index);
-			current_index.add(s.duration);
-			console.debug('Cue index: ' + spreadsheet2cue.dur2index(s.duration));
-		}
-	  return text;
-	},
-
 
 	/** Pad a number with zeros.
 	 * Credit: http://stackoverflow.com/a/9744576/412495
@@ -65,6 +21,21 @@ var spreadsheet2cue = {
 		return (pad + n).slice(-pad.length);
 	},
 
+	/** Create a file and download it within JavaScript.
+	 * Credit: http://stackoverflow.com/a/18197341
+	 */
+	download: function(filename, text) {
+	  var element = document.createElement('a');
+		element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+	  element.setAttribute('download', filename);
+
+	  element.style.display = 'none';
+		document.body.appendChild(element);
+
+	  element.click();
+
+	  document.body.removeChild(element);
+	},
 };
 
 window.onload = function() {
@@ -77,8 +48,8 @@ window.onload = function() {
 	// A placeholder fills the textarea when no text is in there.
 	textarea.setAttribute('placeholder',
 		'Paste tab-delimited text and press ENTER\n' +
-		'0:02:05	Drukqs	Aphex Twin	Avril 14th\n' +
-		'0:06:02	Flavour Country EP	Bent	Exercise 5'
+		'0:02:05\tDrukqs\tAphex Twin\tAvril 14th\n' +
+		'0:06:02\tFlavour\tCountry EP\tBent\tExercise 5'
 	);
 
 	/* DEBUGGING ONLY */
@@ -110,57 +81,13 @@ function process(){
 	var text = spreadsheet2cue.textarea.value.trim();
 	if (text.length == 0){
 		console.debug("The user has not pasted any content.");
+		//TODO: alert user of their mistake
 		return false;
 	}
 
 	var cue = new Cue(text);
-/*
-  var lines = text.split('\n');
-  var songs = [];
-  for(var i=0; i<lines.length; i++){
-    var trimmed_line = lines[i].trim();
-    if (trimmed_line.length > 0) {
-      songs.push(
-        process_line(lines[i])
-      );
-    }
-  }
-
-  cue_text = spreadsheet2cue.songs2cue(songs);
-*/
-  spreadsheet2cue.download(cue);
+  spreadsheet2cue.download(spreadsheet2cue.download_filename, cue);
 	return true;
-};
-
-/* Split line into each element:
- *   1. Song duration
- *   2. Album
- *   3. Artist
- *   4. Song title
- *  >4. Misc
- */
-var HEADER_KEYS = [
-  "duration",
-  "album",
-  "artist",
-  "title"
-];
-function process_line(line){
-	var track = new CueTrack(line);
-
-	elements = line.split('\t');
-	song = {};  
-	console.debug('Line length: ' + line.length);
-	for(var i=0; i<elements.length; i++){
-		if (i < HEADER_KEYS.length){
-			song[HEADER_KEYS[i]] = elements[i];
-			console.debug(HEADER_KEYS[i] + ':\t' + elements[i]);
-		}
-	}
-	// Convert to a time duration.
-	song.duration = moment.duration(song.duration);
-	console.debug(song.duration);
-	return song;
 };
 
 
@@ -189,7 +116,7 @@ function Cue(raw_text) {
 		}
 	}
 
-	console.debug("====================");
+	console.debug("======== CUE FILE ========");
 	console.debug(this.toString());
 };
 
@@ -220,6 +147,13 @@ Cue.prototype.toString = function() {
  *
  * Constructor:
  *	Input: tab_delimited_string = "0:02:05	Drukqs	Aphex Twin	Avril 14th\n"
+ *
+ * It is assumed that the format of the input string is like so:
+ *   1. Song duration
+ *   2. Album
+ *   3. Artist
+ *   4. Song title
+ *   5+. Misc
  */
 function CueTrack(tab_delimited_string) {
 	var s = tab_delimited_string.split('\t');
@@ -232,8 +166,8 @@ function CueTrack(tab_delimited_string) {
 	this.index = null;
 	this.track_no = null;
 
+	console.debug("======== CueTrack object ========");
 	console.debug(
-		'CueTrack object := \n' +
 		'\tTitle\t:=\t' + this.title + '\n' +
 		'\tArtist\t:=\t' + this.artist + '\n' +
 		'\tAlbum\t:=\t' + this.album + '\n' +
