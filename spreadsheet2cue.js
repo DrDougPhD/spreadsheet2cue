@@ -3,12 +3,24 @@ var spreadsheet2cue = {
 	/**
 	 * Configuration parameters
 	 */
-	download_filename: 'playlist.cue',
+	download_filename: 'playlist.txt',
 
 	/**
-	 * Utility functions
+	 * Create a file containing the text of the function parameter and download
+	 * it.
 	 */
+	download: function(text) {
+	  var element = document.createElement('a');
+		element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+	  element.setAttribute('download', spreadsheet2cue.download_filename);
 
+	  element.style.display = 'none';
+		document.body.appendChild(element);
+
+	  element.click();
+
+	  document.body.removeChild(element);
+	},
 };
 
 window.onload = function() {
@@ -44,11 +56,10 @@ window.onload = function() {
 
 function process(){
 	var text = spreadsheet2cue.textarea.value.trim();
-	if (!text){
+	if (text.length == 0){
 		console.log("The user has not pasted any content.");
 		return false;
 	}
-	
 
   var lines = text.split('\n');
   var songs = [];
@@ -60,8 +71,9 @@ function process(){
       );
     }
   }
+
   cue_text = songs2cue(songs);
-  download(cue_text);
+  spreadsheet2cue.download(cue_text);
 	return true;
 };
 
@@ -126,19 +138,6 @@ function duration2cue_index(duration){
     ':00';
 };
 
-// Create a file containing the text and download it
-function download(text) {
-  var element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-  element.setAttribute('download', spreadsheet2cue.download_filename);
-
-  element.style.display = 'none';
-  document.body.appendChild(element);
-
-  element.click();
-
-  document.body.removeChild(element);
-};
 
 /* Pad a number with zeros.
  * Credit: http://stackoverflow.com/a/9744576/412495
