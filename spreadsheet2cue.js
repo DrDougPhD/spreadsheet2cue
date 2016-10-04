@@ -11,31 +11,25 @@
  * @namespace spreadsheet2cue
  */
 var spreadsheet2cue = {
-	/////////////////////////////////////////////////////////////////////////////
-	// Configuration parameters
-	/////////////////////////////////////////////////////////////////////////////
 	/**
 	 * Configuration of the cue filename to be downloaded.
 	 * @memberof spreadsheet2cue
 	 * @static
 	 */
 	download_filename: 'playlist.txt',
-
-
 };
 
 window.onload = function() {
-	// The anchor (it looks like a button) should be programmed to preprocess
-	// the textarea's content so that the cue file can be downloaded.
-	var button = document.getElementById('button');
-	button.onclick = function() {
-		return preprocess(button);
-	}
-
 	/* The textarea of the page is used to paste in the user's song spreadsheet
 	 * for conversion to a cue sheet.
 	 */
-	var textarea = spreadsheet2cue.textarea = document.getElementById("input");
+	var textarea = document.getElementById("input");
+
+	/* The anchor (it looks like a button) should be programmed to preprocess
+	 * the textarea's content so that the cue file can be downloaded.
+	 */
+	var button = document.getElementById('button');
+
 
 	// A placeholder fills the textarea when no text is in there.
 	textarea.setAttribute('placeholder',
@@ -56,27 +50,35 @@ window.onload = function() {
 	// If the user presses the ENTER key in the textarea, interpret this as a
 	// submit action.
 	textarea.onkeyup = function(evt) {
-		// Trim away whitespace from textarea.
-		textarea.value = textarea.value.trim();
-
 		evt = evt || window.event;
 		if (evt.keyCode == 13) {
 			//TODO: (cosmetic) prevent newspace from being added if the user presses
 			// enter
-			preprocess(button);
+			preprocess(textarea.value, button);
 			button.click();
 		}
   };
+
+
+	/**
+	 * When the button is pressed, populate its href and download attributes
+	 * with the encoded cue file.
+	 */
+	button.onclick = function() {
+		return preprocess(textarea.value, button);
+	}
 
 };
 
 
 /**
- * @function process
- * @description Process the pasted spreadsheet into a downloaded cue file.
+ * @function preprocess
+ * @description Preprocess the pasted spreadsheet into a downloaded cue file.
  */
-function preprocess(button){
-	var text = spreadsheet2cue.textarea.value.trim();
+function preprocess(text, button){
+
+	// Trim away whitespace from textarea.
+	var text = text.trim();
 	if (text.length == 0){
 		//TODO: alert user of their mistake
 		return false;
