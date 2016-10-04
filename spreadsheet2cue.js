@@ -123,6 +123,8 @@ function process(){
 		return false;
 	}
 
+	var cue = new Cue(text);
+
   var lines = text.split('\n');
   var songs = [];
   for(var i=0; i<lines.length; i++){
@@ -170,8 +172,57 @@ function process_line(line){
 	return song;
 };
 
-/**
- * A CueTrack object, created based on the expected string format.
+
+/** A Cue object, used to build the cue file that is to be downloaded.
+ */
+function Cue(raw_text) {
+	// Keep track of the current index of the song being processed
+	var current_index = moment.duration();
+
+	var lines = raw_text.split('\n');
+	this.songs = [];
+
+	// Iterate over each line in the raw text
+	for(var i=0; i<lines.length; i++){
+		var trimmed_line = lines[i].trim();
+		if (trimmed_line.length > 0) {
+			var track = new CueTrack(lines[i]);
+
+			track.index = current_index;
+			current_index.add(track.duration);
+
+			this.songs.push(track);
+		}
+	}
+
+	console.debug("====================");
+	console.debug(this.toString());
+};
+
+/** The header string of the cue file.
+ */
+Cue.HEADER = '' +
+	'REM GENRE Alternative' + '\n' +
+	'REM DATE 2016' + '\n' +
+	'REM DJ "Diabeatz"' + '\n' +
+	'REM RADIO "KMNR 89.7 FM"' + '\n' +
+	'REM WEBSTREAM "https://boombox.kmnr.org/webstream.ogg.m3u"' + '\n' +
+	'REM COMMENT "Tune in to KMNR 89.7 FM every Friday 2pm-4pm CST to hear my show! Call/text in at 504-656-6735! After Jan 2017, I may have a different show slot, though."' + '\n' +
+	'PERFORMER "Diabeatz"' + '\n' +
+	'TITLE "PhD: Piled Higher & Deeper"' + '\n' +
+	'FILE "ThisUpload.wav" WAVE\n';
+
+
+Cue.prototype.toString = function() {
+	var string = Cue.HEADER;
+ 	for (var i=0; i<this.songs.length; i++) {
+		string += this.songs[i];
+	}
+	return string;
+};
+
+
+/** A CueTrack object, created based on the expected string format.
  *
  * Constructor:
  *	Input: tab_delimited_string = "0:02:05	Drukqs	Aphex Twin	Avril 14th\n"
@@ -183,23 +234,14 @@ function CueTrack(tab_delimited_string) {
 	this.artist = s[2];
 	this.title = s[3];
 
-	CueTrack.cue_index.add(this.duration);
-	this.index = CueTrack.cue_index;
-
 	console.debug(
 		'CueTrack object := \n' +
 		'\tTitle\t:=\t' + this.title + '\n' +
 		'\tArtist\t:=\t' + this.artist + '\n' +
 		'\tAlbum\t:=\t' + this.album + '\n' +
-		'\tLength\t:=\t' + this.duration + '\n' +
-		'\tIndex\t:=\t' + this.index
+		'\tLength\t:=\t' + this.duration + '\n'
 	);
 };
-
-/** Static cue index. This keeps track of the time index at which the song
- * occurs in a music mix.
- */
-CueTrack.cue_index = moment.duration();
 
 CueTrack.prototype.toString = function() {
 	return '' +
