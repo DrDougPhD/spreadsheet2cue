@@ -16,7 +16,7 @@ var spreadsheet2cue = {
 	 * @memberof spreadsheet2cue
 	 * @static
 	 */
-	download_filename: 'playlist.txt',
+	download_filename: 'playlist.cue',
 
 	/**
 	 * Preprocess the pasted spreadsheet into a downloaded cue file.
@@ -64,15 +64,6 @@ window.onload = function() {
 		'0:02:05\tDrukqs\tAphex Twin\tAvril 14th\n' +
 		'0:06:02\tFlavour\tCountry EP\tBent\tExercise 5'
 	);
-
-	/* DEBUGGING ONLY */
-	textarea.value = "" +
-		"0:04:39	Different Trains / Electric Counterpoint	Steve Reich	Electric Counterpoint - Fast (movement 3)\n" +
-		"0:02:05	Drukqs	Aphex Twin	Avril 14th\n" +
-		"0:06:02	Flavour Country EP	Bent	Exercise 5\n" +
-		"0:07:56	Red Extensions of Me	The Flashbulb	Lucid Bass I\n" +
-		"0:06:51	Different Trains / Electric Counterpoint	Steve Reich	Electric Counterpoint - Fast (movement 1)\n" +
-		"0:05:44	Albedo 0.39	Vangelis	Alpha";
 
 	// If the user presses the ENTER key in the textarea, interpret this as a
 	// submit action.
