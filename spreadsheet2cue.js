@@ -1,20 +1,37 @@
-// Namespace for this project.
+/**
+ * @file spreadsheet2cue.js
+ * @author Doug McGeehan <djmvfb@mst.edu>
+ * @copyright Doug McGeehan 2016
+ */
+
+/**
+ * Namespace for the spreadsheet2cue project
+ * @namespace spreadsheet2cue
+ */
 var spreadsheet2cue = {
-	/****************************
-	 * Configuration parameters
-	 ****************************/
+	/////////////////////////////////////////////////////////////////////////////
+	// Configuration parameters
+	/////////////////////////////////////////////////////////////////////////////
+	/**
+	 * Configuration of the cue filename to be downloaded.
+	 * @memberof spreadsheet2cue
+	 * @static
+	 */
 	download_filename: 'playlist.cue',
 
 
-	/*********************
-	 * Utility functions
-	 *********************/
+	/////////////////////////////////////////////////////////////////////////////
+	// Utility functions
+	/////////////////////////////////////////////////////////////////////////////
 
 	/** Pad a number with zeros.
-	 * Credit: http://stackoverflow.com/a/9744576/412495
-	 * e.g. var fu = paddy(14, 5);				// '00014'
-	 *      var bar = paddy(2, 4, '#');		// '###2'
-	 */
+		* e.g. var fu = paddy(14, 5);				// '00014'
+		*      var bar = paddy(2, 4, '#');		// '###2'
+		* @function paddy
+		* @memberof spreadsheet2cue
+		* @static
+		* @copyright http://stackoverflow.com/a/9744576/412495
+		*/
 	paddy: function (n, p, c) {
 		var pad_char = typeof c !== 'undefined' ? c : '0';
 		var pad = new Array(1 + p).join(pad_char);
@@ -22,11 +39,15 @@ var spreadsheet2cue = {
 	},
 
 	/** Create a file and download it within JavaScript.
-	 * Credit: http://stackoverflow.com/a/18197341
+	 * @function download
+	 * @memberof spreadsheet2cue
+	 * @static
+	 * @copyright http://stackoverflow.com/a/18197341
 	 */
 	download: function(filename, text) {
 	  var element = document.createElement('a');
-		element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+		element.setAttribute('href',
+			'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
 	  element.setAttribute('download', filename);
 
 	  element.style.display = 'none';
@@ -77,6 +98,11 @@ window.onload = function() {
 
 };
 
+
+/**
+ * @function process
+ * @description Process the pasted spreadsheet into a downloaded cue file.
+ */
 function process(){
 	var text = spreadsheet2cue.textarea.value.trim();
 	if (text.length == 0){
@@ -90,7 +116,10 @@ function process(){
 };
 
 
-/** A Cue object, used to build the cue file that is to be downloaded.
+/**
+ * A Cue object, used to build the cue file that is to be downloaded.
+ * @constructor
+ * @param {string} raw_text - tab-delimited, multiline string
  */
 function Cue(raw_text) {
 	// Keep track of the current index of the song being processed
@@ -116,7 +145,9 @@ function Cue(raw_text) {
 	}
 };
 
-/** The header string of the cue file.
+/**
+ * The header string of the cue file.
+ * @static
  */
 Cue.HEADER = '' +
 	'REM GENRE Alternative' + '\n' +
@@ -129,7 +160,12 @@ Cue.HEADER = '' +
 	'TITLE "PhD: Piled Higher & Deeper"' + '\n' +
 	'FILE "ThisUpload.wav" WAVE\n';
 
-
+/** @function
+ * @name toString
+ * @desctription Convert the Cue object to the string format that would appear
+ * in a cue file.
+ * @returns {string}
+ */
 Cue.prototype.toString = function() {
 	var string = Cue.HEADER;
  	for (var i=0; i<this.songs.length; i++) {
@@ -139,20 +175,23 @@ Cue.prototype.toString = function() {
 };
 
 
-/** A CueTrack object, created based on the expected string format.
- *
- * Constructor:
- *	Input: tab_delimited_string = "0:02:05	Drukqs	Aphex Twin	Avril 14th\n"
- *
- * It is assumed that the format of the input string is like so:
- *   1. Song duration
- *   2. Album
- *   3. Artist
- *   4. Song title
- *   5+. Misc
+/**
+ * Instantiate a CueTrack object from a tab-delimited string of the format
+ * "0:02:05	Drukqs	Aphex Twin	Avril 14th\n"
+ * @class
+ * @param {string} tab_delimited_string - tab-delimited string containing song details
  */
 function CueTrack(tab_delimited_string) {
 	var s = tab_delimited_string.split('\t');
+
+	/*
+	 * It is assumed that the format of the input string is like so:
+	 *   1. Song duration
+	 *   2. Album
+	 *   3. Artist
+	 *   4. Song title
+	 *   5+. Misc
+	 */
 	this.duration = moment.duration(s[0]);
 	this.album = s[1];
 	this.artist = s[2];
@@ -163,17 +202,25 @@ function CueTrack(tab_delimited_string) {
 	this.track_no = null;
 };
 
-/** Convert a moment.duration object to the cue index string of the format
- *	"MM:SS:FF", where
- *		MM is minutes,
- *		SS is seconds,
- *		FF is frames (there are 75 frames to 1 second).
+/** @function
+ * @name timeFormat
+ * @desctription Convert a moment.duration object to the cue index string of 
+ * the format "MM:SS:FF", where MM is minutes, SS is seconds, and FF is frames
+ * (there are 75 frames to 1 second).
+ * @param {moment.duration} duration - the moment.duration object to stringify
+ * @returns {string}
  */
 CueTrack.prototype.timeFormat = function(duration) {
 	var p = spreadsheet2cue.paddy;
 	return p(duration.minutes(), 2) + ':' + p(duration.seconds(), 2) + ':00';
 };
 
+/** @function
+ * @name toString
+ * @desctription Convert the CueTrack to the string format that would appear
+ * in a cue file.
+ * @returns {string}
+ */
 CueTrack.prototype.toString = function() {
 	return '' +
 		'  TRACK ' + spreadsheet2cue.paddy(this.track_no, 2) + ' AUDIO' + '\n' +
