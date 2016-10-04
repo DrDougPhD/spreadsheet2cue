@@ -1,23 +1,49 @@
+// Namespace for this project.
+var spreadsheet2cue = {};
+
 window.onload = function() {
-	var text_area = document.getElementById("input");
-	text_area.setAttribute('placeholder',
-		'Paste tab-delimited text here and press ENTER\n' +
+
+	/* The textarea of the page is used to paste in the user's song spreadsheet
+	 * for conversion to a cue sheet.
+	 */
+	var textarea = spreadsheet2cue.textarea = document.getElementById("input");
+
+	// A placeholder fills the textarea when no text is in there.
+	textarea.setAttribute('placeholder',
+		'Paste tab-delimited text and press ENTER\n' +
 		'0:02:05	Drukqs	Aphex Twin	Avril 14th\n' +
 		'0:06:02	Flavour Country EP	Bent	Exercise 5'
 	);
 
-	// If the user presses the enter key, interpret this as a submit action
-	text_area.onkeyup = function(evt) {
+	// If the user presses the ENTER key in the textarea, interpret this as a
+	// submit action.
+	textarea.onkeyup = function(evt) {
+		// Trim away whitespace from textarea.
+		textarea.value = textarea.value.trim();
+
 		evt = evt || window.event;
 		if (evt.keyCode == 13) {
-      //TODO: remove the added newspace?
+			//TODO: remove the added newspace
 			process();
 		}
   };
+
+	// If the user has not pasted text into the textarea, we do not want to
+	// process the placeholder text.
+	spreadsheet2cue.isNotPopulated = function () {
+		return textarea.value.length == 0;
+	};
+
 };
 
 function process(){
-	var text = document.getElementById("input").value;
+	if (spreadsheet2cue.isNotPopulated()){
+		console.log("The user has not pasted any content.");
+		return false;
+	}
+	
+	var text = spreadsheet2cue.textarea.value; //document.getElementById("input").value;
+
   var lines = text.split('\n');
   var songs = [];
   for(var i=0; i<lines.length; i++){
@@ -30,6 +56,7 @@ function process(){
   }
   cue_text = songs2cue(songs);
   download("playlist.txt", cue_text);
+	return true;
 };
 
 /* Split line into each element:
