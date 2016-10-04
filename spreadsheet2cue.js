@@ -1,13 +1,11 @@
 // Namespace for this project.
 var spreadsheet2cue = {
-	/**
+	/****************************
 	 * Configuration parameters
-	 */
+	 ****************************/
 	download_filename: 'playlist.txt',
 
-	/**
-	 * Create a file containing the text of the function parameter and download
-	 * it.
+	/** Create a file and download it.
 	 */
 	download: function(text) {
 	  var element = document.createElement('a');
@@ -20,6 +18,21 @@ var spreadsheet2cue = {
 	  element.click();
 
 	  document.body.removeChild(element);
+	},
+
+	/*********************
+	 * Utility functions
+	 *********************/
+
+	/** Pad a number with zeros.
+	 * Credit: http://stackoverflow.com/a/9744576/412495
+	 * e.g. var fu = paddy(14, 5);				// '00014'
+	 *      var bar = paddy(2, 4, '#');		// '###2'
+	 */
+	paddy: function (n, p, c) {
+		var pad_char = typeof c !== 'undefined' ? c : '0';
+		var pad = new Array(1 + p).join(pad_char);
+		return (pad + n).slice(-pad.length);
 	},
 };
 
@@ -50,7 +63,6 @@ window.onload = function() {
 			process();
 		}
   };
-
 
 };
 
@@ -119,7 +131,7 @@ function songs2cue(songs){
   var current_timespot = moment.duration();
   for (var i=0; i<songs.length; i++){
     // 01, 02, ..., 09, 10, 11, ...
-    var track_no = paddy(i, 2);
+    var track_no = spreadsheet2cue.paddy(i, 2);
     var s = songs[i];
     text += '\n' +
       '  TRACK ' + track_no + ' AUDIO' + '\n' +
@@ -133,19 +145,10 @@ function songs2cue(songs){
 };
 
 function duration2cue_index(duration){
-  return paddy(duration.minutes(), 2) + 
-    ':' + paddy(duration.seconds(), 2) + 
+  return spreadsheet2cue.paddy(duration.minutes(), 2) + 
+    ':' + spreadsheet2cue.paddy(duration.seconds(), 2) + 
     ':00';
 };
 
 
-/* Pad a number with zeros.
- * Credit: http://stackoverflow.com/a/9744576/412495
- * e.g. var fu = paddy(14, 5); // 00014
- *      var bar = paddy(2, 4, '#'); // ###2
- */
-function paddy(n, p, c) {
-    var pad_char = typeof c !== 'undefined' ? c : '0';
-    var pad = new Array(1 + p).join(pad_char);
-    return (pad + n).slice(-pad.length);
-}
+
