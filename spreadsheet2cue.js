@@ -34,6 +34,17 @@ var spreadsheet2cue = {
 		var pad = new Array(1 + p).join(pad_char);
 		return (pad + n).slice(-pad.length);
 	},
+
+	/** Convert a moment.duration object to the cue index string of the format
+	 *	"MM:SS:FF", where
+	 *		MM is minutes,
+	 *		SS is seconds,
+	 *		FF is frames (there are 75 frames to 1 second).
+	 */
+	dur2index: function (duration){
+		var p = this.paddy;
+		return p(duration.minutes(), 2) + ':' + p(duration.seconds(), 2) + ':00';
+	},
 };
 
 window.onload = function() {
@@ -137,17 +148,11 @@ function songs2cue(songs){
       '  TRACK ' + track_no + ' AUDIO' + '\n' +
       '    TITLE "' + s.title + '"\n' +
       '    PERFORMER "' + s.artist + '"\n' +
-      '    INDEX 01 ' + duration2cue_index(current_timespot);
+      '    INDEX 01 ' + spreadsheet2cue.dur2index(current_timespot);
     current_timespot.add(s.duration);
-    console.log(duration2cue_index(s.duration));
+    console.log("Cue index: " + spreadsheet2cue.dur2index(s.duration));
   }
   return text;
 };
-
-function duration2cue_index(duration){
-	var p = spreadsheet2cue.paddy;
-  return p(duration.minutes(), 2) + ':' + p(duration.seconds(), 2) + ':00';
-};
-
 
 
