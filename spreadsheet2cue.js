@@ -80,7 +80,6 @@ window.onload = function() {
 function process(){
 	var text = spreadsheet2cue.textarea.value.trim();
 	if (text.length == 0){
-		console.debug("The user has not pasted any content.");
 		//TODO: alert user of their mistake
 		return false;
 	}
@@ -115,9 +114,6 @@ function Cue(raw_text) {
 			this.songs.push(track);
 		}
 	}
-
-	console.debug("======== CUE FILE ========");
-	console.debug(this.toString());
 };
 
 /** The header string of the cue file.
@@ -165,14 +161,6 @@ function CueTrack(tab_delimited_string) {
 	// These attrs will be populated later
 	this.index = null;
 	this.track_no = null;
-
-	console.debug("======== CueTrack object ========");
-	console.debug(
-		'\tTitle\t:=\t' + this.title + '\n' +
-		'\tArtist\t:=\t' + this.artist + '\n' +
-		'\tAlbum\t:=\t' + this.album + '\n' +
-		'\tLength\t:=\t' + this.timeFormat(this.duration) + '\n'
-	);
 };
 
 /** Convert a moment.duration object to the cue index string of the format
