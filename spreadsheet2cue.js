@@ -124,7 +124,7 @@ function process(){
 	}
 
 	var cue = new Cue(text);
-
+/*
   var lines = text.split('\n');
   var songs = [];
   for(var i=0; i<lines.length; i++){
@@ -138,6 +138,7 @@ function process(){
 
   cue_text = spreadsheet2cue.songs2cue(songs);
   //spreadsheet2cue.download(cue_text);
+*/
 	return true;
 };
 
@@ -191,6 +192,9 @@ function Cue(raw_text) {
 			track.index = current_index;
 			current_index.add(track.duration);
 
+			// Track numbers start from 1 in a cue file.
+			track.track_no = i+1;
+
 			this.songs.push(track);
 		}
 	}
@@ -234,6 +238,10 @@ function CueTrack(tab_delimited_string) {
 	this.artist = s[2];
 	this.title = s[3];
 
+	// These attrs will be populated later
+	this.index = null;
+	this.track_no = null;
+
 	console.debug(
 		'CueTrack object := \n' +
 		'\tTitle\t:=\t' + this.title + '\n' +
@@ -245,9 +253,9 @@ function CueTrack(tab_delimited_string) {
 
 CueTrack.prototype.toString = function() {
 	return '' +
-		'  TRACK ' + this.track_no + ' AUDIO' + '\n' +
+		'  TRACK ' + spreadsheet2cue.paddy(this.track_no, 2) + ' AUDIO' + '\n' +
 		'    TITLE "' + this.title + '"\n' +
 		'    PERFORMER "' + this.artist + '"\n' +
-		'    INDEX 01 ' + this.index;
+		'    INDEX 01 ' + this.index + '\n';
 	// + spreadsheet2cue.dur2index(current_index);
 };
