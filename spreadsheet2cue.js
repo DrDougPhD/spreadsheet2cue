@@ -22,28 +22,6 @@ var spreadsheet2cue = {
 	download_filename: 'playlist.txt',
 
 
-	/**
-	 * Create a file and download it within JavaScript.
-	 * Adapted from http://stackoverflow.com/a/18197341
-	 * @function download
-	 * @memberof spreadsheet2cue
-	 * @static
-	 */
-	download: function(filename, text) {
-	  var element = document.getElementById('button');
-		element.setAttribute('href',
-			'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-	  element.setAttribute('download', filename);
-
-		/*
-	  element.style.display = 'none';
-		document.body.appendChild(element);
-
-	  element.click();
-
-	  document.body.removeChild(element);
-		*/
-	},
 };
 
 window.onload = function() {
@@ -80,7 +58,9 @@ window.onload = function() {
 		if (evt.keyCode == 13) {
 			//TODO: (cosmetic) prevent newspace from being added if the user presses
 			// enter
-			process();
+			var button = document.getElementById('button');
+			preprocess(button);
+			button.click();
 		}
   };
 
@@ -91,15 +71,23 @@ window.onload = function() {
  * @function process
  * @description Process the pasted spreadsheet into a downloaded cue file.
  */
-function process(){
+function preprocess(button){
 	var text = spreadsheet2cue.textarea.value.trim();
 	if (text.length == 0){
 		//TODO: alert user of their mistake
 		return false;
 	}
 
+	// Convert raw text in textarea to a Cue object
 	var cue = new Cue(text);
-  spreadsheet2cue.download(spreadsheet2cue.download_filename, cue);
+
+	/* Create a file from Cue object and download it within JavaScript
+	 * Adapted from http://stackoverflow.com/a/18197341
+	 */
+	button.setAttribute('href',
+		'data:text/plain;charset=utf-8,' + encodeURIComponent(cue));
+	button.setAttribute('download', spreadsheet2cue.download_filename);
+
 	return true;
 };
 
