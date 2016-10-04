@@ -135,7 +135,7 @@ function process(){
   }
 
   cue_text = spreadsheet2cue.songs2cue(songs);
-  spreadsheet2cue.download(cue_text);
+  //spreadsheet2cue.download(cue_text);
 	return true;
 };
 
@@ -183,19 +183,29 @@ function CueTrack(tab_delimited_string) {
 	this.artist = s[2];
 	this.title = s[3];
 
+	CueTrack.cue_index.add(this.duration);
+	this.index = CueTrack.cue_index;
+
 	console.debug(
 		'CueTrack object := \n' +
 		'\tTitle\t:=\t' + this.title + '\n' +
 		'\tArtist\t:=\t' + this.artist + '\n' +
 		'\tAlbum\t:=\t' + this.album + '\n' +
-		'\tLength\t:=\t' + this.duration
+		'\tLength\t:=\t' + this.duration + '\n' +
+		'\tIndex\t:=\t' + this.index
 	);
 };
+
+/** Static cue index. This keeps track of the time index at which the song
+ * occurs in a music mix.
+ */
+CueTrack.cue_index = moment.duration();
 
 CueTrack.prototype.toString = function() {
 	return '' +
 		'  TRACK ' + this.track_no + ' AUDIO' + '\n' +
 		'    TITLE "' + this.title + '"\n' +
 		'    PERFORMER "' + this.artist + '"\n' +
-		'    INDEX 01 ';// + spreadsheet2cue.dur2index(current_index);
+		'    INDEX 01 ' + this.index;
+	// + spreadsheet2cue.dur2index(current_index);
 };
