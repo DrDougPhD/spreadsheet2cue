@@ -8,9 +8,6 @@ var spreadsheet2cue = {
 	/**
 	 * Utility functions
 	 */
-	isNotPopulated: function (text) {
-		return text.length == 0;
-	},
 
 };
 
@@ -42,14 +39,12 @@ window.onload = function() {
 		}
   };
 
-	// If the user has not pasted text into the textarea, we do not want to
-	// process the placeholder text.
 
 };
 
 function process(){
 	var text = spreadsheet2cue.textarea.value.trim();
-	if (spreadsheet2cue.isNotPopulated(text)){
+	if (!text){
 		console.log("The user has not pasted any content.");
 		return false;
 	}
