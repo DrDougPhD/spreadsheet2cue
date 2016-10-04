@@ -153,6 +153,8 @@ var HEADER_KEYS = [
   "title"
 ];
 function process_line(line){
+	var track = new CueTrack(line);
+
 	elements = line.split('\t');
 	song = {};  
 	console.debug('Line length: ' + line.length);
@@ -168,4 +170,32 @@ function process_line(line){
 	return song;
 };
 
+/**
+ * A CueTrack object, created based on the expected string format.
+ *
+ * Constructor:
+ *	Input: tab_delimited_string = "0:02:05	Drukqs	Aphex Twin	Avril 14th\n"
+ */
+function CueTrack(tab_delimited_string) {
+	var s = tab_delimited_string.split('\t');
+	this.duration = moment.duration(s[0]);
+	this.album = s[1];
+	this.artist = s[2];
+	this.title = s[3];
 
+	console.debug(
+		'CueTrack object := \n' +
+		'\tTitle\t:=\t' + this.title + '\n' +
+		'\tArtist\t:=\t' + this.artist + '\n' +
+		'\tAlbum\t:=\t' + this.album + '\n' +
+		'\tLength\t:=\t' + this.duration
+	);
+};
+
+CueTrack.prototype.toString = function() {
+	return '' +
+		'  TRACK ' + this.track_no + ' AUDIO' + '\n' +
+		'    TITLE "' + this.title + '"\n' +
+		'    PERFORMER "' + this.artist + '"\n' +
+		'    INDEX 01 ';// + spreadsheet2cue.dur2index(current_index);
+};
