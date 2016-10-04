@@ -1,20 +1,19 @@
 body {
-	background:#728EB2;
+	background: #496C89;
 }
 
-#container {
-	width: 100%;
-	height: 100%;  
+.center {
+	width: 600px;
+	height: 522px;
+	position: absolute;
+	left: 50%;
+	top: 50%; 
+	margin-left: -300px;
+	margin-top: -261px;
 }
 
-textarea {
-	display: block;
-	box-sizing: border-box;
+textarea#input {
 	overflow: hidden;
 	padding: 10px;
-	width: 100%;
-	height: 100%;
 	font-size: 14px;
-	border-radius: 8px;
-	border: 6px solid #556677;
 }

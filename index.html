@@ -6,18 +6,29 @@
 	<!--[if lt IE 9]>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
 	<![endif]-->
-	<script src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js'></script>
-	<script src='spreadsheet2cue.js'></script>
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="style.css"></link>
+	<script src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js'></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script src='spreadsheet2cue.js'></script>
 </head>
 
 <body>
+
+	<div class='input-group center'>
+		<textarea id='input' name='input' class='form-control custom-control' rows='25'></textarea>     
+		<span class='input-group-addon btn btn-primary' onclick='process()'>Download</span>
+	</div>
+
+	<!--
 	<div id='text2cue'>
 		<form onsubmit="process(this['input'].value)">
 			<textarea id='input' name='input' rows='25'></textarea>
 		  <input type='submit' value='Download' />
 		</form>
 	</div>
+	-->
 </body>
 
 </html>

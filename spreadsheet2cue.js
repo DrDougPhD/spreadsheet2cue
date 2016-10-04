@@ -11,12 +11,13 @@ window.onload = function() {
 		evt = evt || window.event;
 		if (evt.keyCode == 13) {
       //TODO: remove the added newspace?
-			process(this.value);
+			process();
 		}
   };
 };
 
-function process(text){
+function process(){
+	var text = document.getElementById("input").value;
   var lines = text.split('\n');
   var songs = [];
   for(var i=0; i<lines.length; i++){
