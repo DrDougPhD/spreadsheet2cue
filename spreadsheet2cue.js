@@ -23,26 +23,27 @@ window.onload = function() {
 
 		evt = evt || window.event;
 		if (evt.keyCode == 13) {
-			//TODO: remove the added newspace
+			//TODO: (cosmetic) prevent newspace from being added if the user presses
+			// enter
 			process();
 		}
   };
 
 	// If the user has not pasted text into the textarea, we do not want to
 	// process the placeholder text.
-	spreadsheet2cue.isNotPopulated = function () {
-		return textarea.value.length == 0;
+	spreadsheet2cue.isNotPopulated = function (text) {
+		return text.length == 0;
 	};
 
 };
 
 function process(){
-	if (spreadsheet2cue.isNotPopulated()){
+	var text = spreadsheet2cue.textarea.value.trim();
+	if (spreadsheet2cue.isNotPopulated(text)){
 		console.log("The user has not pasted any content.");
 		return false;
 	}
 	
-	var text = spreadsheet2cue.textarea.value; //document.getElementById("input").value;
 
   var lines = text.split('\n');
   var songs = [];
