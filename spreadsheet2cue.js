@@ -15,6 +15,7 @@ var spreadsheet2cue = {
 	 * Configuration of the cue filename to be downloaded.
 	 * @memberof spreadsheet2cue
 	 * @static
+	 * @todo Add text input to specify download filename, with default
 	 */
 	download_filename: 'playlist.cue',
 
@@ -32,8 +33,14 @@ var spreadsheet2cue = {
 			return false;
 		}
 
+		// Check if header is included
+		var lines = text.split('\n');
+		if (spreadsheet2cue.isHeader(lines[0])) {
+			lines.splice(0, 1);
+		}
+
 		// Convert raw text in textarea to a Cue object
-		var cue = new Cue(text);
+		var cue = new Cue(lines);
 
 		/* Create a file from Cue object and download it within JavaScript
 		 * Adapted from http://stackoverflow.com/a/18197341
@@ -42,6 +49,20 @@ var spreadsheet2cue = {
 			'data:text/plain;charset=utf-8,' + encodeURIComponent(cue));
 		button.setAttribute('download', spreadsheet2cue.download_filename);
 		return true;
+	},
+
+	/**
+	 * Detect if text is the header for the spreadsheet
+	 * @function isHeader
+	 * @memberof spreadsheet2cue
+	 * @static
+	 */
+	isHeader: function(string) {
+		var tab_split_string = string.split('\t');
+		var is_album_header = 'album' === tab_split_string[1].toLowerCase();
+		var is_artist_header = 'artist' === tab_split_string[2].toLowerCase();
+		var is_song_header = 'song' === tab_split_string[3].toLowerCase();
+		return (is_album_header && is_artist_header && is_song_header);
 	},
 };
 
@@ -93,15 +114,13 @@ window.onload = function() {
 /**
  * A Cue object, used to build the cue file that is to be downloaded.
  * @constructor
- * @param {string} raw_text - tab-delimited, multiline string
+ * @param {string[]} lines - tab-delimited strings
  */
-function Cue(raw_text) {
+function Cue(lines) {
 	// Keep track of the current index of the song being processed
 	var current_index = moment.duration();
 
-	var lines = raw_text.split('\n');
 	this.songs = [];
-
 	// Iterate over each line in the raw text
 	for(var i=0; i<lines.length; i++){
 		var trimmed_line = lines[i].trim();
