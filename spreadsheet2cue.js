@@ -65,16 +65,6 @@ var spreadsheet2cue = {
 		return (pad + n).slice(-pad.length);
 	},
 
-	/** Convert a moment.duration object to the cue index string of the format
-	 *	"MM:SS:FF", where
-	 *		MM is minutes,
-	 *		SS is seconds,
-	 *		FF is frames (there are 75 frames to 1 second).
-	 */
-	dur2index: function (duration){
-		var p = this.paddy;
-		return p(duration.minutes(), 2) + ':' + p(duration.seconds(), 2) + ':00';
-	},
 };
 
 window.onload = function() {
@@ -247,8 +237,19 @@ function CueTrack(tab_delimited_string) {
 		'\tTitle\t:=\t' + this.title + '\n' +
 		'\tArtist\t:=\t' + this.artist + '\n' +
 		'\tAlbum\t:=\t' + this.album + '\n' +
-		'\tLength\t:=\t' + this.duration + '\n'
+		'\tLength\t:=\t' + this.timeFormat(this.duration) + '\n'
 	);
+};
+
+/** Convert a moment.duration object to the cue index string of the format
+ *	"MM:SS:FF", where
+ *		MM is minutes,
+ *		SS is seconds,
+ *		FF is frames (there are 75 frames to 1 second).
+ */
+CueTrack.prototype.timeFormat = function(duration) {
+	var p = spreadsheet2cue.paddy;
+	return p(duration.minutes(), 2) + ':' + p(duration.seconds(), 2) + ':00';
 };
 
 CueTrack.prototype.toString = function() {
@@ -256,6 +257,5 @@ CueTrack.prototype.toString = function() {
 		'  TRACK ' + spreadsheet2cue.paddy(this.track_no, 2) + ' AUDIO' + '\n' +
 		'    TITLE "' + this.title + '"\n' +
 		'    PERFORMER "' + this.artist + '"\n' +
-		'    INDEX 01 ' + this.index + '\n';
-	// + spreadsheet2cue.dur2index(current_index);
+		'    INDEX 01 ' + this.timeFormat(this.index) + '\n';
 };
