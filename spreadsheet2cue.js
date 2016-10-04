@@ -25,7 +25,12 @@ var spreadsheet2cue = {
 };
 
 window.onload = function() {
-	//TODO: add onclick to the anchor
+	// The anchor (it looks like a button) should be programmed to preprocess
+	// the textarea's content so that the cue file can be downloaded.
+	var button = document.getElementById('button');
+	button.onclick = function() {
+		return preprocess(button);
+	}
 
 	/* The textarea of the page is used to paste in the user's song spreadsheet
 	 * for conversion to a cue sheet.
@@ -58,7 +63,6 @@ window.onload = function() {
 		if (evt.keyCode == 13) {
 			//TODO: (cosmetic) prevent newspace from being added if the user presses
 			// enter
-			var button = document.getElementById('button');
 			preprocess(button);
 			button.click();
 		}
