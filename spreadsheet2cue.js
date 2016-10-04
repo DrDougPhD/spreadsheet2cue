@@ -145,9 +145,8 @@ function songs2cue(songs){
 };
 
 function duration2cue_index(duration){
-  return spreadsheet2cue.paddy(duration.minutes(), 2) + 
-    ':' + spreadsheet2cue.paddy(duration.seconds(), 2) + 
-    ':00';
+	var p = spreadsheet2cue.paddy;
+  return p(duration.minutes(), 2) + ':' + p(duration.seconds(), 2) + ':00';
 };
 
 
