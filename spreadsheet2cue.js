@@ -132,14 +132,16 @@ function Cue(raw_text) {
  * @static
  */
 Cue.HEADER = '' +
-	'REM GENRE Alternative' + '\n' +
+	'REM GENRE Electronic' + '\n' +
 	'REM DATE 2016' + '\n' +
 	'REM DJ "Diabeatz"' + '\n' +
 	'REM RADIO "KMNR 89.7 FM"' + '\n' +
 	'REM WEBSTREAM "https://boombox.kmnr.org/webstream.ogg.m3u"' + '\n' +
-	'REM COMMENT "Tune in to KMNR 89.7 FM every Friday 2pm-4pm CST to hear my show! Call/text in at 504-656-6735! After Jan 2017, I may have a different show slot, though."' + '\n' +
+	'REM COMMENT "Tune in to KMNR 89.7 FM every Friday 2pm-4pm CST to hear my' +
+	  ' show! Call/text in at 504-656-6735! After Jan 2017, I may have a' +
+		'	different show slot, so keep up with me at FB@KMNRDiabeatz."' + '\n' +
 	'PERFORMER "Diabeatz"' + '\n' +
-	'TITLE "PhD: Piled Higher & Deeper"' + '\n' +
+	'TITLE "PhD: Piled Higher & Deeper (Fall 2016)"' + '\n' +
 	'FILE "ThisUpload.wav" WAVE\n';
 
 /** @function
@@ -149,10 +151,14 @@ Cue.HEADER = '' +
  * @returns {string}
  */
 Cue.prototype.toString = function() {
+	// initialize cue with the header
 	var string = Cue.HEADER;
+
+	// iterate over each song and add its string representation to the cue
  	for (var i=0; i<this.songs.length; i++) {
 		string += this.songs[i];
 	}
+
 	return string;
 };
 
