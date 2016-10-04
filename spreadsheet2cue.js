@@ -58,6 +58,7 @@ var spreadsheet2cue = {
 	 * @static
 	 */
 	isHeader: function(string) {
+		//TODO: accept tab, comma, and semi-colon delimited text imputs
 		var tab_split_string = string.split('\t');
 		var is_album_header = 'album' === tab_split_string[1].toLowerCase();
 		var is_artist_header = 'artist' === tab_split_string[2].toLowerCase();
@@ -143,17 +144,9 @@ function Cue(lines) {
  * @static
  */
 Cue.HEADER = '' +
-	'REM GENRE Electronic' + '\n' +
-	'REM DATE 2016' + '\n' +
-	'REM DJ "Diabeatz"' + '\n' +
-	'REM RADIO "KMNR 89.7 FM"' + '\n' +
-	'REM WEBSTREAM "https://boombox.kmnr.org/webstream.ogg.m3u"' + '\n' +
-	'REM COMMENT "Tune in to KMNR 89.7 FM every Friday 2pm-4pm CST to hear my' +
-	  ' show! Call/text in at 504-656-6735! After Jan 2017, I may have a' +
-		'	different show slot, so keep up with me at FB@KMNRDiabeatz."' + '\n' +
-	'PERFORMER "Diabeatz"' + '\n' +
-	'TITLE "PhD: Piled Higher & Deeper (Fall 2016)"' + '\n' +
-	'FILE "ThisUpload.wav" WAVE\n';
+	'REM COMMENT "Created using spreadsheet2cue: ' +
+		'https://github.com/DrDougPhD/spreadsheet2cue"\n' +
+	'FILE "MyMixIsFire.wav" WAVE\n';
 
 /** @function
  * @name toString
@@ -181,6 +174,7 @@ Cue.prototype.toString = function() {
  * @param {string} tab_delimited_string - tab-delimited string containing song details
  */
 function CueTrack(tab_delimited_string) {
+	//TODO: accept tab, comma, and semi-colon delimited text imputs
 	var s = tab_delimited_string.split('\t');
 
 	/*
