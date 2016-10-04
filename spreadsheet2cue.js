@@ -179,7 +179,7 @@ function Cue(raw_text) {
 		if (trimmed_line.length > 0) {
 			var track = new CueTrack(lines[i]);
 
-			track.index = current_index;
+			track.index = moment.duration(current_index);
 			current_index.add(track.duration);
 
 			// Track numbers start from 1 in a cue file.
