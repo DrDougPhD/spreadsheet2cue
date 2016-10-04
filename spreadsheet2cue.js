@@ -127,8 +127,8 @@ function process(){
   }
 
   cue_text = spreadsheet2cue.songs2cue(songs);
-  //spreadsheet2cue.download(cue_text);
 */
+  spreadsheet2cue.download(cue);
 	return true;
 };
 
