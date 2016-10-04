@@ -1,5 +1,7 @@
 // Namespace for this project.
-var spreadsheet2cue = {};
+var spreadsheet2cue = {
+	download_filename: 'playlist.cue',
+};
 
 window.onload = function() {
 
@@ -56,7 +58,7 @@ function process(){
     }
   }
   cue_text = songs2cue(songs);
-  download("playlist.txt", cue_text);
+  download(cue_text);
 	return true;
 };
 
@@ -122,10 +124,10 @@ function duration2cue_index(duration){
 };
 
 // Create a file containing the text and download it
-function download(filename, text) {
+function download(text) {
   var element = document.createElement('a');
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-  element.setAttribute('download', filename);
+  element.setAttribute('download', spreadsheet2cue.download_filename);
 
   element.style.display = 'none';
   document.body.appendChild(element);
