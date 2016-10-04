@@ -5,6 +5,18 @@ var spreadsheet2cue = {
 	 ****************************/
 	download_filename: 'playlist.txt',
 
+	CUE_HEADER: '' +
+		'REM GENRE Alternative' + '\n' +
+		'REM DATE 2016' + '\n' +
+		'REM DJ "Diabeatz"' + '\n' +
+		'REM RADIO "KMNR 89.7 FM"' + '\n' +
+		'REM WEBSTREAM "https://boombox.kmnr.org/webstream.ogg.m3u"' + '\n' +
+		'REM COMMENT "Tune in to KMNR 89.7 FM every Friday 2pm-4pm CST to hear my show! Call/text in at 504-656-6735! After Jan 2017, I may have a different show slot, though."' + '\n' +
+		'PERFORMER "Diabeatz"' + '\n' +
+		'TITLE "PhD: Piled Higher & Deeper"' + '\n' +
+		'FILE "ThisUpload.wav" WAVE',
+
+
 	/** Create a file and download it.
 	 */
 	download: function(text) {
@@ -23,6 +35,24 @@ var spreadsheet2cue = {
 	/*********************
 	 * Utility functions
 	 *********************/
+	songs2cue: function(songs) {
+		var text = this.CUE_HEADER;
+		var current_index = moment.duration();
+		for (var i=0; i<songs.length; i++){
+			// 01, 02, ..., 09, 10, 11, ...
+			var track_no = spreadsheet2cue.paddy(i, 2);
+			var s = songs[i];
+			text += '\n' +
+				'  TRACK ' + track_no + ' AUDIO' + '\n' +
+				'    TITLE "' + s.title + '"\n' +
+				'    PERFORMER "' + s.artist + '"\n' +
+				'    INDEX 01 ' + spreadsheet2cue.dur2index(current_index);
+			current_index.add(s.duration);
+			console.debug('Cue index: ' + spreadsheet2cue.dur2index(s.duration));
+		}
+	  return text;
+	},
+
 
 	/** Pad a number with zeros.
 	 * Credit: http://stackoverflow.com/a/9744576/412495
@@ -104,7 +134,7 @@ function process(){
     }
   }
 
-  cue_text = songs2cue(songs);
+  cue_text = spreadsheet2cue.songs2cue(songs);
   spreadsheet2cue.download(cue_text);
 	return true;
 };
@@ -138,32 +168,4 @@ function process_line(line){
 	return song;
 };
 
-function songs2cue(songs){
-	var CUE_HEADER = '' +
-		'REM GENRE Alternative' + '\n' +
-		'REM DATE 2016' + '\n' +
-		'REM DJ "Diabeatz"' + '\n' +
-		'REM RADIO "KMNR 89.7 FM"' + '\n' +
-		'REM WEBSTREAM "https://boombox.kmnr.org/webstream.ogg.m3u"' + '\n' +
-		'REM COMMENT "Tune in to KMNR 89.7 FM every Friday 2pm-4pm CST to hear my show! Call/text in at 504-656-6735! After Jan 2017, I may have a different show slot, though."' + '\n' +
-		'PERFORMER "Diabeatz"' + '\n' +
-		'TITLE "PhD: Piled Higher & Deeper"' + '\n' +
-		'FILE "ThisUpload.wav" WAVE';
-
-	var text = CUE_HEADER;
-	var current_index = moment.duration();
-	for (var i=0; i<songs.length; i++){
-		// 01, 02, ..., 09, 10, 11, ...
-		var track_no = spreadsheet2cue.paddy(i, 2);
-		var s = songs[i];
-		text += '\n' +
-			'  TRACK ' + track_no + ' AUDIO' + '\n' +
-			'    TITLE "' + s.title + '"\n' +
-			'    PERFORMER "' + s.artist + '"\n' +
-			'    INDEX 01 ' + spreadsheet2cue.dur2index(current_index);
-		current_index.add(s.duration);
-		console.debug('Cue index: ' + spreadsheet2cue.dur2index(s.duration));
-	}
-  return text;
-};
 
