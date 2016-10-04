@@ -1,7 +1,12 @@
 # spreadsheet2cue
 Create a cue sheet from a spreadsheet containing song titles, artists, durations, and other data.
 
-### A Spreadsheet to a Cue Sheet
+### Live Demo
+
+You can check out a live demo at https://drdougphd.github.io/spreadsheet2cue/
+
+### Why this exists: Laziness
+
 I created this tiny project because of my use of MixCloud.
 Every once in a while, I like to make mixes of the music that I enjoy (I usually do this in Audacity, not too familiar with other mixing software).
 If I'm particularly proud of a mix, I'll upload it to MixCloud.
