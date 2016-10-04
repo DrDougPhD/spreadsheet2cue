@@ -61,6 +61,15 @@ window.onload = function() {
 		'0:06:02	Flavour Country EP	Bent	Exercise 5'
 	);
 
+	/* DEBUGGING ONLY */
+	textarea.value = "" +
+		"0:04:39	Different Trains / Electric Counterpoint	Steve Reich	Electric Counterpoint - Fast (movement 3)\n" +
+		"0:02:05	Drukqs	Aphex Twin	Avril 14th\n" +
+		"0:06:02	Flavour Country EP	Bent	Exercise 5\n" +
+		"0:07:56	Red Extensions of Me	The Flashbulb	Lucid Bass I\n" +
+		"0:06:51	Different Trains / Electric Counterpoint	Steve Reich	Electric Counterpoint - Fast (movement 1)\n" +
+		"0:05:44	Albedo 0.39	Vangelis	Alpha";
+
 	// If the user presses the ENTER key in the textarea, interpret this as a
 	// submit action.
 	textarea.onkeyup = function(evt) {
@@ -139,7 +148,7 @@ function songs2cue(songs){
     'PERFORMER "Diabeatz"' + '\n' +
     'TITLE "PhD: Piled Higher & Deeper"' + '\n' +
     'FILE "ThisUpload.wav" WAVE';
-  var current_timespot = moment.duration();
+  var current_index = moment.duration();
   for (var i=0; i<songs.length; i++){
     // 01, 02, ..., 09, 10, 11, ...
     var track_no = spreadsheet2cue.paddy(i, 2);
@@ -148,8 +157,8 @@ function songs2cue(songs){
       '  TRACK ' + track_no + ' AUDIO' + '\n' +
       '    TITLE "' + s.title + '"\n' +
       '    PERFORMER "' + s.artist + '"\n' +
-      '    INDEX 01 ' + spreadsheet2cue.dur2index(current_timespot);
-    current_timespot.add(s.duration);
+      '    INDEX 01 ' + spreadsheet2cue.dur2index(current_index);
+    current_index.add(s.duration);
     console.log("Cue index: " + spreadsheet2cue.dur2index(s.duration));
   }
   return text;
