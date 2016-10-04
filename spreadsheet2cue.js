@@ -17,7 +17,34 @@ var spreadsheet2cue = {
 	 * @static
 	 */
 	download_filename: 'playlist.txt',
+
+	/**
+	 * Preprocess the pasted spreadsheet into a downloaded cue file.
+	 * @function preprocess
+	 * @memberof spreadsheet2cue
+	 * @static
+	 */
+	preprocess: function(text, button) {
+		// Trim away whitespace from textarea.
+		var text = text.trim();
+		if (text.length == 0){
+			//TODO: alert user of their mistake
+			return false;
+		}
+
+		// Convert raw text in textarea to a Cue object
+		var cue = new Cue(text);
+
+		/* Create a file from Cue object and download it within JavaScript
+		 * Adapted from http://stackoverflow.com/a/18197341
+		 */
+		button.setAttribute('href',
+			'data:text/plain;charset=utf-8,' + encodeURIComponent(cue));
+		button.setAttribute('download', spreadsheet2cue.download_filename);
+		return true;
+	},
 };
+
 
 window.onload = function() {
 	/* The textarea of the page is used to paste in the user's song spreadsheet
@@ -54,7 +81,7 @@ window.onload = function() {
 		if (evt.keyCode == 13) {
 			//TODO: (cosmetic) prevent newspace from being added if the user presses
 			// enter
-			preprocess(textarea.value, button);
+			spreadsheet2cue.preprocess(textarea.value, button);
 			button.click();
 		}
   };
@@ -65,37 +92,11 @@ window.onload = function() {
 	 * with the encoded cue file.
 	 */
 	button.onclick = function() {
-		return preprocess(textarea.value, button);
+		return spreadsheet2cue.preprocess(textarea.value, button);
 	}
 
 };
 
-
-/**
- * @function preprocess
- * @description Preprocess the pasted spreadsheet into a downloaded cue file.
- */
-function preprocess(text, button){
-
-	// Trim away whitespace from textarea.
-	var text = text.trim();
-	if (text.length == 0){
-		//TODO: alert user of their mistake
-		return false;
-	}
-
-	// Convert raw text in textarea to a Cue object
-	var cue = new Cue(text);
-
-	/* Create a file from Cue object and download it within JavaScript
-	 * Adapted from http://stackoverflow.com/a/18197341
-	 */
-	button.setAttribute('href',
-		'data:text/plain;charset=utf-8,' + encodeURIComponent(cue));
-	button.setAttribute('download', spreadsheet2cue.download_filename);
-
-	return true;
-};
 
 
 /**
