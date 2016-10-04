@@ -1,7 +1,9 @@
 /**
+ * Create a cue file from a spreadsheet of songs.
  * @file spreadsheet2cue.js
  * @author Doug McGeehan <djmvfb@mst.edu>
  * @copyright Doug McGeehan 2016
+ * @see {@link http://wiki.hydrogenaud.io/index.php?title=Cue_sheet}
  */
 
 /**
@@ -17,7 +19,7 @@ var spreadsheet2cue = {
 	 * @memberof spreadsheet2cue
 	 * @static
 	 */
-	download_filename: 'playlist.cue',
+	download_filename: 'playlist.txt',
 
 
 	/**
@@ -28,21 +30,24 @@ var spreadsheet2cue = {
 	 * @static
 	 */
 	download: function(filename, text) {
-	  var element = document.createElement('a');
+	  var element = document.getElementById('button');
 		element.setAttribute('href',
 			'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
 	  element.setAttribute('download', filename);
 
+		/*
 	  element.style.display = 'none';
 		document.body.appendChild(element);
 
 	  element.click();
 
 	  document.body.removeChild(element);
+		*/
 	},
 };
 
 window.onload = function() {
+	//TODO: add onclick to the anchor
 
 	/* The textarea of the page is used to paste in the user's song spreadsheet
 	 * for conversion to a cue sheet.
